@@ -1,0 +1,64 @@
+# Ranch Hunt Tracker
+
+Progressive web app for a ranch iPad: interactive satellite map, blinds and feeders, season occupancy, and a harvest log. All data stays on the device.
+
+## Run
+
+```bash
+npm install
+npm run dev
+```
+
+Then open the URL Vite prints (typically http://localhost:5173).
+
+Production build:
+
+```bash
+npm run build
+npm run preview
+```
+
+## iPad — Add to Home Screen
+
+1. Open the app in **Safari** (not Chrome).
+2. Tap the **Share** button.
+3. Tap **Add to Home Screen**, then **Add**.
+4. Launch it from the home screen. It runs full-screen like a native app.
+
+After the first load, the ranch map and app shell are cached for offline use.
+
+On the Map tab, **pinch to zoom** and **drag to pan**. Page zoom is turned off so those gestures stay on the map.
+
+## Admin mode
+
+Default PIN is **1234** (change it in Settings).
+
+| Admin OFF | Admin ON |
+| --- | --- |
+| View map, check in/out of blinds, log harvest | Drag pins, add/delete/rename blinds & feeders |
+
+Tap **Admin OFF** in the header (or Settings → Unlock admin) and enter the PIN.
+
+## Map
+
+The annotated ranch satellite photo is a Leaflet `CRS.Simple` image overlay (`public/assets/ranch-map-annotated.jpg`):
+
+- **Yellow** — property boundary and hunting lanes/roads
+- **Green Laguna** — ~2-acre pond, upper-left
+- **Blue well** — well/campsite west of Laguna
+
+Suggested blinds sit on lanes, overlook Laguna from the south or east, and stay clear of the well/camp. Restore that layout anytime from Settings (admin).
+
+## Tabs
+
+- **Map** — pinch-zoom map, legend, pins
+- **Blinds** — occupancy board
+- **Seasons** — hunting seasons (occupancy and harvest attach to the active one)
+- **Harvest** — log and totals
+- **Settings** — PIN, backup, layout restore, home-screen notes
+
+## Data
+
+Saved to **localStorage** and **IndexedDB**. Export/import JSON from Settings. Nothing is sent to a server.
+
+Do not deploy this copy externally unless you intend to; it is meant to run locally on the ranch iPad.
