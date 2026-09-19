@@ -584,6 +584,63 @@ button {
   margin: 0 0 10px;
 }
 
+.site-gate {
+  min-height: 100dvh;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  padding-top: calc(24px + var(--safe-top));
+  padding-bottom: calc(24px + var(--safe-bottom));
+  background:
+    radial-gradient(ellipse at top, #2a331f 0%, transparent 55%),
+    var(--bg);
+}
+
+.site-gate-card {
+  width: min(420px, 100%);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 28px 22px 24px;
+  box-shadow: var(--shadow);
+}
+
+.site-gate-kicker {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.site-gate-card h1 {
+  margin: 0 0 8px;
+  font-size: 26px;
+}
+
+.site-gate-copy {
+  margin: 0 0 20px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.site-gate-card .field input {
+  font-size: 22px;
+  letter-spacing: 0.28em;
+  text-align: center;
+  min-height: 52px;
+}
+
+.site-gate-submit {
+  width: 100%;
+  min-height: 52px;
+  font-size: 17px;
+}
+
 .stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

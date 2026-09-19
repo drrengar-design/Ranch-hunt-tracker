@@ -29,9 +29,24 @@ After the first load, the ranch map and app shell are cached for offline use.
 
 On the Map tab, **pinch to zoom** and **drag to pan**. Page zoom is turned off so those gestures stay on the map.
 
+## Site access code
+
+Before the app UI loads, a gate asks for a site code. The correct code is checked in the browser only. Success sets `sessionStorage` key `ranchHuntSiteUnlocked=1`, so this browser tab/session stays unlocked until it is closed (or you tap **Lock** in Settings). A new session must enter the code again.
+
+Default code is **1234**. Change it with a Vite env var (do not commit `.env`):
+
+```bash
+# .env
+VITE_SITE_PIN=your-code
+```
+
+If `VITE_SITE_PIN` is unset, the app falls back to `1234`. See `.env.example`. Rebuild after changing the env var so it is baked into the client bundle. On Netlify, set `VITE_SITE_PIN` in Site configuration → Environment variables.
+
+This gate is separate from **Admin mode** below (blinds/feeders editing).
+
 ## Admin mode
 
-Default PIN is **1234** (change it in Settings).
+Default PIN is **1234** (change it in Settings). This PIN only unlocks admin map tools; it does not replace the site access code.
 
 | Admin OFF | Admin ON |
 | --- | --- |
@@ -55,7 +70,7 @@ Suggested blinds sit on lanes, overlook Laguna from the south or east, and stay 
 - **Blinds** — occupancy board
 - **Seasons** — hunting seasons (occupancy and harvest attach to the active one)
 - **Harvest** — log and totals
-- **Settings** — PIN, backup, layout restore, home-screen notes
+- **Settings** — site lock, admin PIN, backup, layout restore, home-screen notes
 
 ## Data
 

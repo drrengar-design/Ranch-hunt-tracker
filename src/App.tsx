@@ -8,6 +8,7 @@ import { BlindsTab } from './components/BlindsTab';
 import { SeasonsTab } from './components/SeasonsTab';
 import { HarvestTab } from './components/HarvestTab';
 import { SettingsTab } from './components/SettingsTab';
+import { SiteGate } from './components/SiteGate';
 
 function Shell() {
   const { ready, activeSeason } = useStore();
@@ -83,8 +84,10 @@ function Shell() {
 
 export default function App() {
   return (
-    <StoreProvider>
-      <Shell />
-    </StoreProvider>
+    <SiteGate>
+      <StoreProvider>
+        <Shell />
+      </StoreProvider>
+    </SiteGate>
   );
 }

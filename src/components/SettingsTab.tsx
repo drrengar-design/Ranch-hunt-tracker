@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { exportFilename, parseImport } from '../storage';
 import { useStore } from '../store';
 import { Modal } from './Modal';
+import { useSiteLock } from './SiteGate';
 
 export function SettingsTab({
   admin,
@@ -13,6 +14,7 @@ export function SettingsTab({
   onLock: () => void;
 }) {
   const { data, setPin, restoreSuggestions, replaceAll, resetAll } = useStore();
+  const lockSite = useSiteLock();
   const fileRef = useRef<HTMLInputElement>(null);
   const [pinOpen, setPinOpen] = useState(false);
   const [pin, setPinValue] = useState('');
@@ -50,6 +52,19 @@ export function SettingsTab({
       <p className="sub">Local ranch iPad app. Nothing is uploaded.</p>
 
       <article className="card">
+        <h3>Site lock</h3>
+        <p className="meta">
+          Lock this browser session. Anyone using this device will need the
+          site code again. This does not change admin mode.
+        </p>
+        <div className="row" style={{ marginTop: 10 }}>
+          <button className="btn" type="button" onClick={lockSite}>
+            Lock
+          </button>
+        </div>
+      </article>
+
+      <article className="card" style={{ marginTop: 12 }}>
         <h3>Admin mode</h3>
         <p className="meta">
           {admin
