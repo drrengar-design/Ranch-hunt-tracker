@@ -364,17 +364,35 @@ function HuntMarkerView({
   onHarvest: () => void;
 }) {
   const { moveMarker } = useStore();
+  const markerRef = useRef<L.Marker | null>(null);
   const icon = useMemo(
-    () => pinIcon(marker.kind, marker.name, occupied ? 'occupied' : ''),
-    [marker.kind, marker.name, occupied],
+    () =>
+      pinIcon(
+        marker.kind,
+        marker.name,
+        `${occupied ? 'occupied' : ''} ${admin ? 'draggable-pin' : ''}`,
+      ),
+    [marker.kind, marker.name, occupied, admin],
   );
+
+  useEffect(() => {
+    const m = markerRef.current;
+    if (!m?.dragging) return;
+    if (admin) m.dragging.enable();
+    else m.dragging.disable();
+  }, [admin, icon]);
 
   return (
     <Marker
+      ref={markerRef}
       position={toLatLng(marker.x, marker.y)}
       icon={icon}
       draggable={admin}
+      autoPan={admin}
       eventHandlers={{
+        dragstart: (e) => {
+          (e.target as L.Marker).closePopup();
+        },
         dragend: (e) => {
           const ll = (e.target as L.Marker).getLatLng();
           const { x, y } = fromLatLng(ll.lat, ll.lng);
@@ -539,7 +557,7 @@ export function MapView({ show, admin }: { show: boolean; admin: boolean }) {
             </div>
             <p className="meta" style={{ margin: '8px 0 0' }}>
               Pinch to zoom · drag to pan
-              {admin ? ' · drag pins to move' : ''}
+              {admin ? ' · grab a B/F pin and drag to move it' : ''}
             </p>
           </>
         )}

@@ -398,6 +398,18 @@ button {
   box-shadow: 0 0 0 3px var(--occupied), 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
+.pin.draggable-pin {
+  cursor: grab;
+}
+
+.pin.draggable-pin:active {
+  cursor: grabbing;
+}
+
+.leaflet-marker-draggable {
+  cursor: grab;
+}
+
 .pin-label {
   margin-top: 4px;
   font-size: 11px;
