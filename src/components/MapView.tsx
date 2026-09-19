@@ -32,8 +32,8 @@ function pinIcon(
   return L.divIcon({
     className: `pin ${kind} ${extra}`,
     html: `<div class="pin-inner"><div class="pin-mark"><span>${letter}</span></div><div class="pin-label">${escapeHtml(label)}</div></div>`,
-    iconSize: [88, 52],
-    iconAnchor: [44, 36],
+    iconSize: [88, 56],
+    iconAnchor: [44, 40],
   });
 }
 
