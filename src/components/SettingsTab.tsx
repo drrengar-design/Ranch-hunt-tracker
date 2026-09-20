@@ -115,8 +115,8 @@ export function SettingsTab({
       <article className="card" style={{ marginTop: 12 }}>
         <h3>Layout</h3>
         <p className="meta">
-          Restore the suggested blinds and feeders on lanes, overlooking Laguna,
-          clear of the well/camp. Occupied check-ins on stands are cleared.
+          Restore Blind 1–7 and Feeder 1–7 on the current ranch map lanes.
+          Occupied check-ins on stands are cleared.
         </p>
         <button
           className="btn"

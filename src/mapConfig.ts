@@ -1,9 +1,15 @@
 import type { LatLngExpression, LatLngBoundsExpression } from 'leaflet';
 
-/** Pixel size of public/assets/ranch-map-annotated.jpg */
-export const MAP_WIDTH = 2048;
-export const MAP_HEIGHT = 2731;
-export const MAP_IMAGE_URL = '/assets/ranch-map-annotated.jpg';
+/** Pixel size of public/assets/ranch-map-yellow-logo-enhanced.png */
+export const MAP_WIDTH = 1476;
+export const MAP_HEIGHT = 787;
+export const MAP_IMAGE_URL = '/assets/ranch-map-yellow-logo-enhanced.png';
+
+/**
+ * Bump when the base photo or default pin set changes so devices that already
+ * stored the previous orientation get the new suggested layout on load.
+ */
+export const MAP_LAYOUT_VERSION = 2;
 
 /** Leaflet CRS.Simple bounds: [south-west, north-east] = [[0,0], [height, width]] */
 export const MAP_BOUNDS: LatLngBoundsExpression = [

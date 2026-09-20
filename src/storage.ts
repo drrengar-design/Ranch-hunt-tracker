@@ -1,5 +1,6 @@
 import { get, set } from 'idb-keyval';
 import type { AppData } from './types';
+import { MAP_LAYOUT_VERSION } from './mapConfig';
 import { SUGGESTED_MARKERS, defaultSeason } from './suggestions';
 
 export const IDB_KEY = 'ranch-hunt-state';
@@ -11,6 +12,7 @@ export function defaultData(): AppData {
   const season = defaultSeason();
   return {
     version: 1,
+    layoutVersion: MAP_LAYOUT_VERSION,
     pin: DEFAULT_PIN,
     markers: SUGGESTED_MARKERS.map((m) => ({ ...m })),
     seasons: [season],
@@ -25,15 +27,28 @@ function migrate(raw: unknown): AppData {
   const base = defaultData();
   if (!raw || typeof raw !== 'object') return base;
   const d = raw as Partial<AppData>;
+  const storedLayout =
+    typeof d.layoutVersion === 'number' ? d.layoutVersion : 0;
+  const relayout = storedLayout < MAP_LAYOUT_VERSION;
+  const markers = relayout
+    ? base.markers
+    : Array.isArray(d.markers)
+      ? d.markers
+      : base.markers;
+  const markerIds = new Set(markers.map((m) => m.id));
+  const rawCheckIns = Array.isArray(d.checkIns) ? d.checkIns : [];
   return {
     version: 1,
+    layoutVersion: MAP_LAYOUT_VERSION,
     pin: typeof d.pin === 'string' && d.pin.length > 0 ? d.pin : DEFAULT_PIN,
-    markers: Array.isArray(d.markers) ? d.markers : base.markers,
+    markers,
     seasons:
       Array.isArray(d.seasons) && d.seasons.length > 0 ? d.seasons : base.seasons,
     activeSeasonId:
       typeof d.activeSeasonId === 'string' ? d.activeSeasonId : base.activeSeasonId,
-    checkIns: Array.isArray(d.checkIns) ? d.checkIns : [],
+    checkIns: relayout
+      ? rawCheckIns.filter((c) => markerIds.has(c.markerId))
+      : rawCheckIns,
     harvests: Array.isArray(d.harvests) ? d.harvests : [],
     hunterRoster: Array.isArray(d.hunterRoster) ? d.hunterRoster : [],
   };

@@ -60,8 +60,8 @@ export function BlindsTab({ admin }: { admin: boolean }) {
     <div className="page">
       <h2>Blinds &amp; feeders</h2>
       <p className="sub">
-        Suggested stands sit on hunting lanes, overlook Laguna, and stay west-clear
-        of the well/camp.
+        Seven blinds and seven feeders sit on the yellow hunting lanes. Laguna
+        and the well/camp are in the northeast ranch.
       </p>
 
       <h3 style={{ margin: '0 0 8px' }}>Blinds</h3>

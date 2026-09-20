@@ -41,6 +41,8 @@ export interface HarvestEntry {
 
 export interface AppData {
   version: 1;
+  /** Ranch photo + default pin layout. Bumped when the map asset changes. */
+  layoutVersion: number;
   pin: string;
   markers: HuntMarker[];
   seasons: Season[];

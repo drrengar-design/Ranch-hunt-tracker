@@ -4,6 +4,7 @@ import {
   ImageOverlay,
   MapContainer,
   Marker,
+  Polyline,
   Popup,
   ZoomControl,
   useMap,
@@ -17,7 +18,7 @@ import {
   fromLatLng,
   toLatLng,
 } from '../mapConfig';
-import { LAGUNA, WELL } from '../suggestions';
+import { LAGUNA, LANE_LINKS, SUGGESTED_MARKERS, WELL } from '../suggestions';
 import type { HuntMarker, MarkerKind } from '../types';
 import { formatWhen, useStore } from '../store';
 import { Modal } from './Modal';
@@ -64,6 +65,48 @@ function InvalidateOnShow({ show }: { show: boolean }) {
     return () => window.clearTimeout(t);
   }, [map, show]);
   return null;
+}
+
+function LaneLines({ markers }: { markers: HuntMarker[] }) {
+  const byId = useMemo(() => {
+    const map = new Map<string, HuntMarker>();
+    for (const m of SUGGESTED_MARKERS) map.set(m.id, m);
+    for (const m of markers) map.set(m.id, m);
+    return map;
+  }, [markers]);
+
+  const segments = useMemo(() => {
+    const lines: { id: string; positions: ReturnType<typeof toLatLng>[] }[] = [];
+    for (const link of LANE_LINKS) {
+      const a = byId.get(link.from);
+      const b = byId.get(link.to);
+      if (!a || !b) continue;
+      lines.push({
+        id: `${link.from}-${link.to}`,
+        positions: [toLatLng(a.x, a.y), toLatLng(b.x, b.y)],
+      });
+    }
+    return lines;
+  }, [byId]);
+
+  return (
+    <>
+      {segments.map((line) => (
+        <Polyline
+          key={line.id}
+          positions={line.positions}
+          interactive={false}
+          pathOptions={{
+            color: '#e6c84a',
+            weight: 3,
+            opacity: 0.92,
+            lineCap: 'round',
+            lineJoin: 'round',
+          }}
+        />
+      ))}
+    </>
+  );
 }
 
 function PlaceClick({
@@ -470,6 +513,8 @@ export function MapView({ show, admin }: { show: boolean; admin: boolean }) {
             setEditId(created.id);
           }}
         />
+
+        <LaneLines markers={data.markers} />
 
         <Marker position={toLatLng(WELL.x, WELL.y)} icon={wellIcon}>
           <Popup>

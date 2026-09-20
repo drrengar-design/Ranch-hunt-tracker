@@ -61,13 +61,14 @@ Tap **Admin OFF** in the header (or Settings → Unlock admin) and enter the PIN
 
 ## Map
 
-The annotated ranch satellite photo is a Leaflet `CRS.Simple` image overlay (`public/assets/ranch-map-annotated.jpg`):
+The ranch satellite photo is a Leaflet `CRS.Simple` image overlay (`public/assets/ranch-map-yellow-logo-enhanced.png`, 1476×787):
 
-- **Yellow** — property boundary and hunting lanes/roads
-- **Green Laguna** — ~2-acre pond, upper-left
-- **Blue well** — well/campsite west of Laguna
+- **Yellow** — property boundary and hunting lanes/roads (also drawn as interactive polylines between blinds)
+- **Green Laguna** — ~2-acre pond, northeast ranch
+- **Blue well** — well/campsite at the northeast corner, north of Laguna
+- **Red dots** — baked-in blind locations on the photo
 
-Suggested blinds sit on lanes, overlook Laguna from the south or east, and stay clear of the well/camp. Restore that layout anytime from Settings (admin).
+Suggested pins are Blind 1–7 and Feeder 1–7 on those lanes. Restore that layout anytime from Settings (admin).
 
 ## Tabs
 
