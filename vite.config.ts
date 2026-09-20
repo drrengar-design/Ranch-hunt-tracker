@@ -6,7 +6,9 @@ import netlify from '@netlify/vite-plugin';
 export default defineConfig({
   plugins: [
     react(),
-    netlify(),
+    netlify({
+      edgeFunctions: { enabled: false },
+    }),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: [

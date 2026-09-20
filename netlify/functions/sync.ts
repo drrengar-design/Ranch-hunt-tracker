@@ -5,10 +5,13 @@ import {
   methodNotAllowed,
   ranchStore,
   RANCH_STATE_KEY,
+  readState,
+  resolveEtag,
+  syncBody,
   unauthorized,
+  unwrap,
   type StoredEnvelope,
 } from './_shared/ranchBlob';
-import type { AppData } from '../../src/types';
 
 export default async (req: Request, _context: Context) => {
   if (req.method === 'OPTIONS') {
@@ -34,19 +37,9 @@ export const config: Config = {
 };
 
 async function handleGet(): Promise<Response> {
-  const store = ranchStore();
-  const result = await store.getWithMetadata(RANCH_STATE_KEY, {
-    type: 'json',
-  });
-  if (!result || result.data == null) {
-    return jsonResponse({ error: 'Empty' }, 404);
-  }
-  const data = unwrap(result.data);
-  return jsonResponse(
-    { data, etag: result.etag },
-    200,
-    result.etag ? { ETag: result.etag } : undefined,
-  );
+  const current = await readState();
+  if (!current) return jsonResponse({ error: 'Empty' }, 404);
+  return syncBody(current.data, current.etag);
 }
 
 async function handlePut(req: Request): Promise<Response> {
@@ -63,73 +56,37 @@ async function handlePut(req: Request): Promise<Response> {
 
   const store = ranchStore();
   const ifMatch = req.headers.get('If-Match');
-  const current = await store.getWithMetadata(RANCH_STATE_KEY, {
-    type: 'json',
-  });
+  const current = await readState();
 
   if (ifMatch) {
-    const written = await store.setJSON(RANCH_STATE_KEY, { data } satisfies StoredEnvelope, {
-      onlyIfMatch: ifMatch,
-    });
+    const written = await store.setJSON(
+      RANCH_STATE_KEY,
+      { data } satisfies StoredEnvelope,
+      { onlyIfMatch: ifMatch },
+    );
     if (!written.modified) {
-      const latest = await store.getWithMetadata(RANCH_STATE_KEY, { type: 'json' });
-      if (!latest || latest.data == null) {
-        return jsonResponse({ error: 'Conflict' }, 409);
-      }
-      return jsonResponse(
-        { data: unwrap(latest.data), etag: latest.etag, error: 'Conflict' },
-        409,
-        latest.etag ? { ETag: latest.etag } : undefined,
-      );
+      const latest = await readState();
+      if (!latest) return jsonResponse({ error: 'Conflict' }, 409);
+      return syncBody(latest.data, latest.etag, { error: 'Conflict' });
     }
-    return jsonResponse(
-      { data, etag: written.etag },
-      200,
-      written.etag ? { ETag: written.etag } : undefined,
-    );
+    const etag = written.etag || (await resolveEtag(store));
+    return syncBody(data, etag);
   }
 
-  if (current && current.data != null) {
-    return jsonResponse(
-      {
-        data: unwrap(current.data),
-        etag: current.etag,
-        error: 'Conflict',
-      },
-      409,
-      current.etag ? { ETag: current.etag } : undefined,
-    );
+  if (current) {
+    return syncBody(current.data, current.etag, { error: 'Conflict' });
   }
 
-  const created = await store.setJSON(RANCH_STATE_KEY, { data } satisfies StoredEnvelope, {
-    onlyIfNew: true,
-  });
-  if (!created.modified) {
-    const latest = await store.getWithMetadata(RANCH_STATE_KEY, {
-      type: 'json',
-    });
-    if (!latest || latest.data == null) {
-      return jsonResponse({ error: 'Conflict' }, 409);
-    }
-    return jsonResponse(
-      { data: unwrap(latest.data), etag: latest.etag, error: 'Conflict' },
-      409,
-      latest.etag ? { ETag: latest.etag } : undefined,
-    );
-  }
-  return jsonResponse(
-    { data, etag: created.etag },
-    200,
-    created.etag ? { ETag: created.etag } : undefined,
+  const created = await store.setJSON(
+    RANCH_STATE_KEY,
+    { data } satisfies StoredEnvelope,
+    { onlyIfNew: true },
   );
-}
-
-function unwrap(raw: unknown): AppData {
-  if (raw && typeof raw === 'object' && 'data' in raw) {
-    const inner = (raw as { data: unknown }).data;
-    if (inner && typeof inner === 'object' && 'markers' in (inner as object)) {
-      return inner as AppData;
-    }
+  if (!created.modified) {
+    const latest = await readState();
+    if (!latest) return jsonResponse({ error: 'Conflict' }, 409);
+    return syncBody(latest.data, latest.etag, { error: 'Conflict' });
   }
-  return raw as AppData;
+  const etag = created.etag || (await resolveEtag(store));
+  return syncBody(data, etag);
 }
