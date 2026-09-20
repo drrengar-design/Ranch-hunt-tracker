@@ -28,8 +28,15 @@ function pinIcon(
   label: string,
   extra = '',
 ): L.DivIcon {
-  const letter =
-    kind === 'blind' ? 'B' : kind === 'feeder' ? 'F' : kind === 'well' ? 'W' : 'L';
+  const letter = kind.includes('well')
+    ? 'W'
+    : kind.includes('laguna')
+      ? 'L'
+      : kind === 'blind'
+        ? 'B'
+        : kind === 'feeder'
+          ? 'F'
+          : 'L';
   return L.divIcon({
     className: `pin ${kind} ${extra}`,
     html: `<div class="pin-inner"><div class="pin-mark"><span>${letter}</span></div><div class="pin-label">${escapeHtml(label)}</div></div>`,

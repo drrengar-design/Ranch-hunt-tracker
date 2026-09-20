@@ -14,10 +14,10 @@ export const WELL = {
 export const LAGUNA = {
   id: 'laguna',
   name: 'Laguna',
-  x: 1308,
-  y: 180,
+  x: 1316,
+  y: 214,
   /** Highlight radius in map pixels (CRS.Simple). */
-  radius: 52,
+  radius: 48,
   notes:
     'Laguna — about 2 acres, the dark circular tank in the northeast. Prime watering hole; hunt from the west or south, not toward camp.',
 };
