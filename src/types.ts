@@ -8,6 +8,10 @@ export interface HuntMarker {
   y: number;
   notes: string;
   suggested?: boolean;
+  /** Last local/remote edit; used for per-marker last-write-wins merge. */
+  updatedAt?: string;
+  /** Days from a full fill until this feeder is empty. Feeders only. */
+  fullToEmptyDays?: number;
 }
 
 export interface Season {
@@ -15,6 +19,7 @@ export interface Season {
   name: string;
   startDate: string;
   endDate: string;
+  updatedAt?: string;
 }
 
 export interface CheckIn {
@@ -24,6 +29,7 @@ export interface CheckIn {
   hunterName: string;
   at: string;
   outAt?: string;
+  updatedAt?: string;
 }
 
 export type GameSex = 'buck' | 'doe' | 'boar' | 'sow' | 'unknown';
@@ -37,6 +43,16 @@ export interface HarvestEntry {
   date: string;
   markerId?: string;
   notes: string;
+  updatedAt?: string;
+}
+
+/** One append-only corn-fill event for a feeder. */
+export interface CornFillEvent {
+  id: string;
+  feederId: string;
+  filledAt: string;
+  by?: string;
+  notes?: string;
 }
 
 export interface AppData {
@@ -50,6 +66,19 @@ export interface AppData {
   checkIns: CheckIn[];
   harvests: HarvestEntry[];
   hunterRoster: string[];
+  /** Document timestamp for last-write-wins of scalar settings. */
+  updatedAt?: string;
+  /** Append-only fill log; last fill per feeder is derived from this. */
+  cornFillEvents?: CornFillEvent[];
+  /**
+   * Default full→empty days for feeders that have no per-feeder override.
+   * Also used when creating new feeders.
+   */
+  cornWarnDays?: number;
+  /** Warn this many days before projected empty. Default 1. */
+  cornWarnMarginDays?: number;
+  /** Marker ids deleted on any device; union-merged so deletes stay gone. */
+  removedMarkerIds?: string[];
 }
 
 export type TabId =
@@ -59,3 +88,5 @@ export type TabId =
   | 'harvest'
   | 'history'
   | 'settings';
+
+export type SyncStatus = 'local' | 'syncing' | 'live' | 'offline' | 'error';

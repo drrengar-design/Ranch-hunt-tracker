@@ -1,8 +1,15 @@
 import { useState } from 'react';
 import { formatWhen, useStore } from '../store';
+import { isLowCorn } from '../corn';
 import { HarvestForm } from './MapView';
 import { Modal } from './Modal';
 import type { HuntMarker } from '../types';
+import {
+  CornFillHistory,
+  CornStatusLine,
+  FeederDurationField,
+  MarkFilledButton,
+} from './CornFillControls';
 
 function CheckInModal({
   marker,
@@ -52,7 +59,7 @@ function CheckInModal({
 }
 
 export function BlindsTab({ admin }: { admin: boolean }) {
-  const { blinds, feeders, occupantOf, checkOut, deleteMarker } = useStore();
+  const { blinds, feeders, occupantOf, checkOut, deleteMarker, data } = useStore();
   const [checkIn, setCheckIn] = useState<HuntMarker | null>(null);
   const [harvestFor, setHarvestFor] = useState<string | null>(null);
 
@@ -115,25 +122,37 @@ export function BlindsTab({ admin }: { admin: boolean }) {
 
       <h3 style={{ margin: '18px 0 8px' }}>Feeders</h3>
       <div className="list">
-        {feeders.map((f) => (
-          <article className="card" key={f.id}>
-            <div className="row spread">
-              <h3>{f.name}</h3>
-              {admin && (
-                <button
-                  className="btn small danger"
-                  type="button"
-                  onClick={() => {
-                    if (confirm(`Delete ${f.name}?`)) deleteMarker(f.id);
-                  }}
-                >
-                  Delete
-                </button>
-              )}
-            </div>
-            {f.notes ? <p className="meta">{f.notes}</p> : null}
-          </article>
-        ))}
+        {feeders.map((f) => {
+          const low = isLowCorn(f, data);
+          return (
+            <article className="card" key={f.id}>
+              <div className="row spread">
+                <h3>{f.name}</h3>
+                <span className={`status ${low ? 'warn' : 'open'}`}>
+                  {low ? 'Low corn' : 'OK'}
+                </span>
+              </div>
+              {f.notes ? <p className="meta">{f.notes}</p> : null}
+              <CornStatusLine marker={f} />
+              <FeederDurationField marker={f} />
+              <CornFillHistory marker={f} limit={4} />
+              <div className="row" style={{ marginTop: 10 }}>
+                <MarkFilledButton marker={f} />
+                {admin && (
+                  <button
+                    className="btn small danger"
+                    type="button"
+                    onClick={() => {
+                      if (confirm(`Delete ${f.name}?`)) deleteMarker(f.id);
+                    }}
+                  >
+                    Delete
+                  </button>
+                )}
+              </div>
+            </article>
+          );
+        })}
       </div>
 
       {checkIn && <CheckInModal marker={checkIn} onClose={() => setCheckIn(null)} />}

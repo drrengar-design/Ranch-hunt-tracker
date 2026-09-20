@@ -19,7 +19,14 @@ import {
 } from '../mapConfig';
 import { LAGUNA, RANCH_HOUSE, WELL } from '../suggestions';
 import type { HuntMarker, MarkerKind } from '../types';
+import { isLowCorn } from '../corn';
 import { formatWhen, useStore } from '../store';
+import {
+  CornFillHistory,
+  CornStatusLine,
+  FeederDurationField,
+  MarkFilledButton,
+} from './CornFillControls';
 import { Modal } from './Modal';
 
 function pinIcon(
@@ -98,10 +105,13 @@ function MarkerEditor({
   marker: HuntMarker;
   onClose: () => void;
 }) {
-  const { upsertMarker, deleteMarker } = useStore();
+  const { upsertMarker, deleteMarker, setFeederDuration, data } = useStore();
   const [name, setName] = useState(marker.name);
   const [notes, setNotes] = useState(marker.notes);
   const [kind, setKind] = useState<MarkerKind>(marker.kind);
+  const [days, setDays] = useState(
+    String(marker.fullToEmptyDays ?? data.cornWarnDays ?? 7),
+  );
 
   return (
     <Modal title="Edit marker" onClose={onClose}>
@@ -133,12 +143,35 @@ function MarkerEditor({
           onChange={(e) => setNotes(e.target.value)}
         />
       </div>
+      {kind === 'feeder' && (
+        <div className="field">
+          <label htmlFor="mk-days">Full to empty (days)</label>
+          <input
+            id="mk-days"
+            type="number"
+            min={1}
+            max={90}
+            value={days}
+            onChange={(e) => setDays(e.target.value)}
+          />
+        </div>
+      )}
       <div className="row">
         <button
           className="btn primary"
           type="button"
           onClick={() => {
-            upsertMarker({ ...marker, name: name.trim() || marker.name, notes, kind });
+            const next = {
+              ...marker,
+              name: name.trim() || marker.name,
+              notes,
+              kind,
+            };
+            upsertMarker(next);
+            if (kind === 'feeder') {
+              const n = Number(days);
+              if (Number.isFinite(n) && n >= 1) setFeederDuration(marker.id, n);
+            }
             onClose();
           }}
         >
@@ -356,6 +389,7 @@ function HuntMarkerView({
   occupied,
   occupantName,
   occupantAt,
+  lowCorn,
   onEdit,
   onCheckIn,
   onCheckOut,
@@ -366,19 +400,27 @@ function HuntMarkerView({
   occupied: boolean;
   occupantName?: string;
   occupantAt?: string;
+  lowCorn: boolean;
   onEdit: () => void;
   onCheckIn: () => void;
   onCheckOut: () => void;
   onHarvest: () => void;
 }) {
   const { moveMarker } = useStore();
+  const markerRef = useRef<L.Marker | null>(null);
+  const extra = occupied ? 'occupied' : lowCorn ? 'low-corn' : '';
   const icon = useMemo(
-    () => pinIcon(marker.kind, marker.name, occupied ? 'occupied' : ''),
-    [marker.kind, marker.name, occupied],
+    () => pinIcon(marker.kind, marker.name, extra),
+    [marker.kind, marker.name, extra],
   );
+
+  useEffect(() => {
+    markerRef.current?.setLatLng(toLatLng(marker.x, marker.y));
+  }, [marker.x, marker.y]);
 
   return (
     <Marker
+      ref={markerRef}
       position={toLatLng(marker.x, marker.y)}
       icon={icon}
       draggable={admin}
@@ -402,27 +444,34 @@ function HuntMarkerView({
                 : ''}
           </p>
           {marker.notes ? <p>{marker.notes}</p> : null}
+          {marker.kind === 'feeder' && (
+            <>
+              <CornStatusLine marker={marker} />
+              <CornFillHistory marker={marker} limit={3} />
+              <FeederDurationField marker={marker} />
+            </>
+          )}
           <div className="popup-actions">
-            {admin ? (
-              <button className="btn small primary" type="button" onClick={onEdit}>
+            {marker.kind === 'feeder' && <MarkFilledButton marker={marker} />}
+            {admin && (
+              <button className="btn small" type="button" onClick={onEdit}>
                 Edit / rename
               </button>
-            ) : (
-              <>
-                {marker.kind === 'blind' && !occupied && (
-                  <button className="btn small primary" type="button" onClick={onCheckIn}>
-                    Check in
-                  </button>
-                )}
-                {marker.kind === 'blind' && occupied && (
-                  <button className="btn small" type="button" onClick={onCheckOut}>
-                    Check out
-                  </button>
-                )}
-                <button className="btn small" type="button" onClick={onHarvest}>
-                  Log harvest
-                </button>
-              </>
+            )}
+            {!admin && marker.kind === 'blind' && !occupied && (
+              <button className="btn small primary" type="button" onClick={onCheckIn}>
+                Check in
+              </button>
+            )}
+            {!admin && marker.kind === 'blind' && occupied && (
+              <button className="btn small" type="button" onClick={onCheckOut}>
+                Check out
+              </button>
+            )}
+            {!admin && (
+              <button className="btn small" type="button" onClick={onHarvest}>
+                Log harvest
+              </button>
             )}
           </div>
         </div>
@@ -521,6 +570,7 @@ export function MapView({ show, admin }: { show: boolean; admin: boolean }) {
               occupied={Boolean(occ)}
               occupantName={occ?.hunterName}
               occupantAt={occ?.at}
+              lowCorn={isLowCorn(m, data)}
               onEdit={() => setEditId(m.id)}
               onCheckIn={() => setCheckInId(m.id)}
               onCheckOut={() => checkOut(m.id)}
@@ -562,6 +612,9 @@ export function MapView({ show, admin }: { show: boolean; admin: boolean }) {
             </div>
             <div className="legend-row">
               <span className="swatch busy" /> Occupied blind
+            </div>
+            <div className="legend-row">
+              <span className="swatch low-corn" /> Low corn
             </div>
             <p className="meta" style={{ margin: '8px 0 0' }}>
               Pinch to zoom · drag to pan

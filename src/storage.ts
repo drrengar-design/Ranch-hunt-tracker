@@ -1,7 +1,11 @@
 import { get, set } from 'idb-keyval';
-import type { AppData } from './types';
+import type { AppData, CornFillEvent, HuntMarker } from './types';
 import { MAP_LAYOUT_VERSION } from './mapConfig';
 import { SUGGESTED_MARKERS, defaultSeason } from './suggestions';
+import {
+  DEFAULT_FULL_TO_EMPTY_DAYS,
+  DEFAULT_CORN_WARN_MARGIN_DAYS,
+} from './corn';
 
 export const IDB_KEY = 'ranch-hunt-state';
 export const LS_KEY = 'ranch-hunt-state';
@@ -10,6 +14,7 @@ const DEFAULT_PIN = '1234';
 
 export function defaultData(): AppData {
   const season = defaultSeason();
+  const now = new Date().toISOString();
   return {
     version: 1,
     layoutVersion: MAP_LAYOUT_VERSION,
@@ -20,23 +25,49 @@ export function defaultData(): AppData {
     checkIns: [],
     harvests: [],
     hunterRoster: [],
+    updatedAt: now,
+    cornFillEvents: [],
+    cornWarnDays: DEFAULT_FULL_TO_EMPTY_DAYS,
+    cornWarnMarginDays: DEFAULT_CORN_WARN_MARGIN_DAYS,
+    removedMarkerIds: [],
   };
 }
 
-function migrate(raw: unknown): AppData {
+function asEvents(raw: unknown): CornFillEvent[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.filter((e): e is CornFillEvent => {
+    if (!e || typeof e !== 'object') return false;
+    const ev = e as CornFillEvent;
+    return (
+      typeof ev.id === 'string' &&
+      typeof ev.feederId === 'string' &&
+      typeof ev.filledAt === 'string'
+    );
+  });
+}
+
+export function migrate(raw: unknown): AppData {
   const base = defaultData();
   if (!raw || typeof raw !== 'object') return base;
   const d = raw as Partial<AppData>;
   const storedLayout =
     typeof d.layoutVersion === 'number' ? d.layoutVersion : 0;
   const relayout = storedLayout < MAP_LAYOUT_VERSION;
-  const markers = relayout
+  const markers: HuntMarker[] = relayout
     ? base.markers
     : Array.isArray(d.markers)
       ? d.markers
       : base.markers;
   const markerIds = new Set(markers.map((m) => m.id));
   const rawCheckIns = Array.isArray(d.checkIns) ? d.checkIns : [];
+  const cornWarnDays =
+    typeof d.cornWarnDays === 'number' && d.cornWarnDays > 0
+      ? d.cornWarnDays
+      : DEFAULT_FULL_TO_EMPTY_DAYS;
+  const cornWarnMarginDays =
+    typeof d.cornWarnMarginDays === 'number' && d.cornWarnMarginDays >= 0
+      ? d.cornWarnMarginDays
+      : DEFAULT_CORN_WARN_MARGIN_DAYS;
   return {
     version: 1,
     layoutVersion: MAP_LAYOUT_VERSION,
@@ -51,6 +82,16 @@ function migrate(raw: unknown): AppData {
       : rawCheckIns,
     harvests: Array.isArray(d.harvests) ? d.harvests : [],
     hunterRoster: Array.isArray(d.hunterRoster) ? d.hunterRoster : [],
+    updatedAt:
+      typeof d.updatedAt === 'string' && d.updatedAt.length > 0
+        ? d.updatedAt
+        : base.updatedAt,
+    cornFillEvents: asEvents(d.cornFillEvents),
+    cornWarnDays,
+    cornWarnMarginDays,
+    removedMarkerIds: Array.isArray(d.removedMarkerIds)
+      ? d.removedMarkerIds.filter((id): id is string => typeof id === 'string')
+      : [],
   };
 }
 
