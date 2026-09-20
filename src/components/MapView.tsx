@@ -17,7 +17,7 @@ import {
   fromLatLng,
   toLatLng,
 } from '../mapConfig';
-import { LAGUNA, WELL } from '../suggestions';
+import { LAGUNA, RANCH_HOUSE, WELL } from '../suggestions';
 import type { HuntMarker, MarkerKind } from '../types';
 import { formatWhen, useStore } from '../store';
 import { Modal } from './Modal';
@@ -27,13 +27,21 @@ function pinIcon(
   label: string,
   extra = '',
 ): L.DivIcon {
-  const letter =
-    kind === 'blind' ? 'B' : kind === 'feeder' ? 'F' : kind === 'well' ? 'W' : 'L';
+  const letter = kind.includes('ranch-house')
+    ? ''
+    : kind === 'blind'
+      ? 'B'
+      : kind === 'feeder'
+        ? 'F'
+        : kind === 'well'
+          ? 'W'
+          : 'L';
+  const wide = kind.includes('ranch-house');
   return L.divIcon({
     className: `pin ${kind} ${extra}`,
     html: `<div class="pin-inner"><div class="pin-mark"><span>${letter}</span></div><div class="pin-label">${escapeHtml(label)}</div></div>`,
-    iconSize: [88, 52],
-    iconAnchor: [44, 36],
+    iconSize: wide ? [110, 52] : [88, 52],
+    iconAnchor: wide ? [55, 36] : [44, 36],
   });
 }
 
@@ -440,6 +448,10 @@ export function MapView({ show, admin }: { show: boolean; admin: boolean }) {
 
   const wellIcon = useMemo(() => pinIcon('landmark well', WELL.name), []);
   const lagunaIcon = useMemo(() => pinIcon('landmark laguna', LAGUNA.name), []);
+  const ranchHouseIcon = useMemo(
+    () => pinIcon('landmark ranch-house', RANCH_HOUSE.name),
+    [],
+  );
 
   return (
     <>
@@ -487,6 +499,17 @@ export function MapView({ show, admin }: { show: boolean; admin: boolean }) {
             </div>
           </Popup>
         </Marker>
+        <Marker
+          position={toLatLng(RANCH_HOUSE.x, RANCH_HOUSE.y)}
+          icon={ranchHouseIcon}
+        >
+          <Popup>
+            <div className="popup-card">
+              <h3>{RANCH_HOUSE.name}</h3>
+              <p>{RANCH_HOUSE.notes}</p>
+            </div>
+          </Popup>
+        </Marker>
 
         {data.markers.map((m) => {
           const occ = occupantOf(m.id);
@@ -527,6 +550,9 @@ export function MapView({ show, admin }: { show: boolean; admin: boolean }) {
             </div>
             <div className="legend-row">
               <span className="swatch well" /> Well / camp
+            </div>
+            <div className="legend-row">
+              <span className="swatch ranch-house" /> Ranch house
             </div>
             <div className="legend-row">
               <span className="swatch blind" /> Blind

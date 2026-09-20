@@ -253,6 +253,11 @@ button {
 .swatch.well {
   background: var(--well);
 }
+.swatch.ranch-house {
+  background: #fff;
+  border-radius: 50%;
+  border-color: #1a1f16;
+}
 .swatch.blind {
   background: #d8b25a;
 }
@@ -412,6 +417,21 @@ button {
   background: var(--green);
   border-radius: 50%;
   transform: none;
+}
+.pin.landmark.ranch-house .pin-inner {
+  width: 110px;
+}
+.pin.landmark.ranch-house .pin-mark {
+  background: #fff;
+  border-radius: 50%;
+  transform: none;
+}
+.pin.landmark.ranch-house .pin-mark span {
+  transform: none;
+}
+.pin.landmark.ranch-house .pin-label {
+  max-width: 110px;
+  color: #fff;
 }
 .pin.occupied .pin-mark {
   box-shadow: 0 0 0 3px var(--occupied), 0 4px 10px rgba(0, 0, 0, 0.4);
