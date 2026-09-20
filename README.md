@@ -63,7 +63,7 @@ Tap **Admin OFF** in the header (or Settings → Unlock admin) and enter the PIN
 
 The ranch satellite photo is a Leaflet `CRS.Simple` image overlay (`public/assets/ranch-map-yellow-logo-enhanced.png`, 1476×787):
 
-- **Yellow** — property boundary and hunting lanes/roads (also drawn as interactive polylines between blinds)
+- **Yellow** — property boundary and hunting lanes/roads baked into the photo
 - **Green Laguna** — ~2-acre pond, northeast ranch
 - **Blue well** — well/campsite at the northeast corner, north of Laguna
 - **Red dots** — baked-in blind locations on the photo

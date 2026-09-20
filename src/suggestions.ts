@@ -20,23 +20,6 @@ export const LAGUNA = {
     'Laguna — about 2 acres in the northeast ranch. Prime watering hole; blinds should overlook water and stay clear of the well/camp.',
 };
 
-export interface LaneLink {
-  from: string;
-  to: string;
-}
-
-/** Hunting-lane segments between red-dot blinds on the 1476×787 map. */
-export const LANE_LINKS: LaneLink[] = [
-  { from: 'b1', to: 'b6' },
-  { from: 'b1', to: 'b3' },
-  { from: 'b2', to: 'b7' },
-  { from: 'b2', to: 'b4' },
-  { from: 'b4', to: 'b5' },
-  { from: 'b4', to: 'b7' },
-  { from: 'b5', to: 'b7' },
-  { from: 'b3', to: 'b6' },
-];
-
 /**
  * Initial blinds and feeders from the ranch photo marker layout
  * (1476×787 pixel coordinates).
