@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { StoreProvider, useStore } from './store';
 import { ADMIN_SESSION_KEY } from './storage';
-import type { TabId } from './types';
+import type { SyncStatus, TabId } from './types';
 import { TabBar } from './components/TabBar';
 import { MapView } from './components/MapView';
 import { BlindsTab } from './components/BlindsTab';
@@ -11,8 +11,16 @@ import { HistoryTab } from './components/HistoryTab';
 import { SettingsTab } from './components/SettingsTab';
 import { SiteGate } from './components/SiteGate';
 
+function syncLabel(status: SyncStatus): string {
+  if (status === 'live') return 'Live';
+  if (status === 'syncing') return 'Sync…';
+  if (status === 'offline') return 'Offline';
+  if (status === 'error') return 'Sync err';
+  return 'Local';
+}
+
 function Shell() {
-  const { ready, activeSeason } = useStore();
+  const { ready, activeSeason, syncStatus, syncDetail, refreshSync } = useStore();
   const [tab, setTab] = useState<TabId>('map');
   const [admin, setAdmin] = useState(
     () => sessionStorage.getItem(ADMIN_SESSION_KEY) === '1',
@@ -69,6 +77,15 @@ function Shell() {
           </div>
         </div>
         <div className="header-actions">
+          <button
+            type="button"
+            className={`badge sync-${syncStatus}`}
+            title={syncDetail || 'Ranch live sync'}
+            onClick={() => refreshSync()}
+          >
+            <span className="dot" />
+            {syncLabel(syncStatus)}
+          </button>
           <button
             type="button"
             className={`badge${admin ? ' on' : ''}`}

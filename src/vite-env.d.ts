@@ -3,4 +3,5 @@
 
 interface ImportMetaEnv {
   readonly VITE_SITE_PIN?: string;
+  readonly VITE_RANCH_SYNC_SECRET?: string;
 }

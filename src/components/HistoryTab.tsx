@@ -6,6 +6,7 @@ import {
   type HistoryCsvRow,
 } from '../historyCsv';
 import { formatWhen, useStore } from '../store';
+import { cornEvents } from '../corn';
 
 const ALL = 'all';
 
@@ -77,7 +78,9 @@ export function HistoryTab() {
   return (
     <div className="page">
       <h2>History</h2>
-      <p className="sub">Every check-in on this device, newest first.</p>
+      <p className="sub">
+        Every check-in, newest first. Occupancy syncs live across ranch devices.
+      </p>
 
       <div className="history-filters">
         <div className="field">
@@ -186,6 +189,44 @@ export function HistoryTab() {
                   <td>{seasonName(c.seasonId)}</td>
                 </tr>
               ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <h3 style={{ margin: '22px 0 8px' }}>Corn fills</h3>
+      <p className="sub" style={{ marginTop: 0 }}>
+        Every feeder fill, newest first. Synced live across ranch devices.
+      </p>
+      {cornEvents(data).length === 0 ? (
+        <article className="card">
+          <p className="meta" style={{ margin: 0 }}>
+            No corn fills yet. Mark a feeder filled from the map pin or Blinds
+            tab.
+          </p>
+        </article>
+      ) : (
+        <div className="history-table-wrap">
+          <table className="history-table">
+            <thead>
+              <tr>
+                <th scope="col">Feeder</th>
+                <th scope="col">Filled</th>
+                <th scope="col">By</th>
+                <th scope="col">Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[...cornEvents(data)]
+                .sort((a, b) => b.filledAt.localeCompare(a.filledAt))
+                .map((e) => (
+                  <tr key={e.id}>
+                    <td>{markerName(e.feederId)}</td>
+                    <td>{formatWhen(e.filledAt)}</td>
+                    <td>{e.by ?? '—'}</td>
+                    <td>{e.notes ?? ''}</td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
