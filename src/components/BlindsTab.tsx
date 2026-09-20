@@ -8,6 +8,7 @@ import {
   CornFillHistory,
   CornStatusLine,
   FeederDurationField,
+  FeederSettingsButton,
   MarkFilledButton,
 } from './CornFillControls';
 
@@ -67,8 +68,10 @@ export function BlindsTab({ admin }: { admin: boolean }) {
     <div className="page">
       <h2>Blinds &amp; feeders</h2>
       <p className="sub">
-        Seven blinds and seven feeders sit on the yellow hunting lanes. Laguna
-        and the well/camp are in the northeast ranch.
+        Seven blinds and seven feeders sit on the yellow hunting lanes. Each
+        feeder has its own days-from-full-to-empty setting (1 week, 3 weeks,
+        or a month are common). Laguna and the well/camp are in the northeast
+        ranch.
       </p>
 
       <h3 style={{ margin: '0 0 8px' }}>Blinds</h3>
@@ -138,6 +141,7 @@ export function BlindsTab({ admin }: { admin: boolean }) {
               <CornFillHistory marker={f} limit={4} />
               <div className="row" style={{ marginTop: 10 }}>
                 <MarkFilledButton marker={f} />
+                <FeederSettingsButton marker={f} />
                 {admin && (
                   <button
                     className="btn small danger"

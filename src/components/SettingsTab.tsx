@@ -129,8 +129,10 @@ export function SettingsTab({
       <article className="card" style={{ marginTop: 12 }}>
         <h3>Corn defaults</h3>
         <p className="meta">
-          Each feeder has its own full-to-empty days (edit on the pin or Blinds
-          tab). These defaults apply to new feeders and as the fallback. Warn
+          Each feeder has its own days-from-full-to-empty (open{' '}
+          <strong>Feeder settings</strong> on a pin or the Blinds tab). Ranch
+          feeders often run about a week, three weeks, or a month. These
+          defaults apply only to <em>new</em> feeders and as a fallback. Warn
           this many days before projected empty (never-filled feeders always
           warn).
         </p>
