@@ -243,6 +243,9 @@ button {
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
+.swatch.boundary {
+  background: #e87a28;
+}
 .swatch.lane {
   background: #e6c84a;
 }

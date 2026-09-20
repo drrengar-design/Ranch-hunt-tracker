@@ -41,6 +41,8 @@ export interface HarvestEntry {
 
 export interface AppData {
   version: 1;
+  /** Increments when the ranch map image / suggested pin layout changes. */
+  mapRevision: number;
   pin: string;
   markers: HuntMarker[];
   seasons: Season[];

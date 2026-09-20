@@ -20,6 +20,7 @@ import type {
 } from './types';
 import { defaultData, loadData, saveData } from './storage';
 import { SUGGESTED_MARKERS } from './suggestions';
+import { MAP_REVISION } from './mapConfig';
 
 function uid(): string {
   return crypto.randomUUID();
@@ -153,6 +154,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       restoreSuggestions: () =>
         update((p) => ({
           ...p,
+          mapRevision: MAP_REVISION,
           markers: SUGGESTED_MARKERS.map((m) => ({ ...m })),
           checkIns: [],
         })),

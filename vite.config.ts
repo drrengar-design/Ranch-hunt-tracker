@@ -13,7 +13,7 @@ export default defineConfig({
         'rancho-1808-logo.jpg',
         'pwa-192.png',
         'pwa-512.png',
-        'assets/ranch-map-annotated.jpg',
+        'assets/ranch-map.jpg',
       ],
       manifest: {
         name: 'Ranch Hunt Tracker',
