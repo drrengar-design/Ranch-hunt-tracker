@@ -19,12 +19,13 @@ import {
 } from '../mapConfig';
 import { LAGUNA, RANCH_HOUSE, WELL } from '../suggestions';
 import type { HuntMarker, MarkerKind } from '../types';
-import { isLowCorn } from '../corn';
+import { isLowCorn, feederDurationDays } from '../corn';
 import { formatWhen, useStore } from '../store';
 import {
   CornFillHistory,
   CornStatusLine,
   FeederDurationField,
+  FeederSettingsButton,
   MarkFilledButton,
 } from './CornFillControls';
 import { Modal } from './Modal';
@@ -105,16 +106,13 @@ function MarkerEditor({
   marker: HuntMarker;
   onClose: () => void;
 }) {
-  const { upsertMarker, deleteMarker, setFeederDuration, data } = useStore();
+  const { upsertMarker, deleteMarker } = useStore();
   const [name, setName] = useState(marker.name);
   const [notes, setNotes] = useState(marker.notes);
   const [kind, setKind] = useState<MarkerKind>(marker.kind);
-  const [days, setDays] = useState(
-    String(marker.fullToEmptyDays ?? data.cornWarnDays ?? 7),
-  );
 
   return (
-    <Modal title="Edit marker" onClose={onClose}>
+    <Modal title={kind === 'feeder' ? 'Feeder settings' : 'Edit marker'} onClose={onClose}>
       <div className="field">
         <label htmlFor="mk-name">Name</label>
         <input
@@ -143,35 +141,18 @@ function MarkerEditor({
           onChange={(e) => setNotes(e.target.value)}
         />
       </div>
-      {kind === 'feeder' && (
-        <div className="field">
-          <label htmlFor="mk-days">Full to empty (days)</label>
-          <input
-            id="mk-days"
-            type="number"
-            min={1}
-            max={90}
-            value={days}
-            onChange={(e) => setDays(e.target.value)}
-          />
-        </div>
-      )}
+      {kind === 'feeder' && <FeederDurationField marker={{ ...marker, kind }} />}
       <div className="row">
         <button
           className="btn primary"
           type="button"
           onClick={() => {
-            const next = {
+            upsertMarker({
               ...marker,
               name: name.trim() || marker.name,
               notes,
               kind,
-            };
-            upsertMarker(next);
-            if (kind === 'feeder') {
-              const n = Number(days);
-              if (Number.isFinite(n) && n >= 1) setFeederDuration(marker.id, n);
-            }
+            });
             onClose();
           }}
         >
@@ -406,7 +387,7 @@ function HuntMarkerView({
   onCheckOut: () => void;
   onHarvest: () => void;
 }) {
-  const { moveMarker } = useStore();
+  const { moveMarker, data } = useStore();
   const markerRef = useRef<L.Marker | null>(null);
   const extra = occupied ? 'occupied' : lowCorn ? 'low-corn' : '';
   const icon = useMemo(
@@ -447,12 +428,20 @@ function HuntMarkerView({
           {marker.kind === 'feeder' && (
             <>
               <CornStatusLine marker={marker} />
+              <p className="meta" style={{ margin: '6px 0 8px' }}>
+                Lasts <strong>{feederDurationDays(marker, data)} days</strong> from
+                full to empty.
+              </p>
               <CornFillHistory marker={marker} limit={3} />
-              <FeederDurationField marker={marker} />
             </>
           )}
           <div className="popup-actions">
-            {marker.kind === 'feeder' && <MarkFilledButton marker={marker} />}
+            {marker.kind === 'feeder' && (
+              <>
+                <MarkFilledButton marker={marker} />
+                <FeederSettingsButton marker={marker} />
+              </>
+            )}
             {admin && (
               <button className="btn small" type="button" onClick={onEdit}>
                 Edit / rename

@@ -44,41 +44,128 @@ export function CornFillHistory({
   );
 }
 
-export function FeederDurationField({ marker }: { marker: HuntMarker }) {
+const DURATION_PRESETS: { days: number; label: string }[] = [
+  { days: 7, label: '1 week' },
+  { days: 21, label: '3 weeks' },
+  { days: 30, label: '1 month' },
+];
+
+export function FeederDurationField({
+  marker,
+  idPrefix = 'days',
+}: {
+  marker: HuntMarker;
+  idPrefix?: string;
+}) {
   const { data, setFeederDuration } = useStore();
   const current = feederDurationDays(marker, data);
   const [value, setValue] = useState(String(current));
+  const inputId = `${idPrefix}-${marker.id}`;
 
   useEffect(() => {
     setValue(String(current));
   }, [current, marker.id]);
 
-  const commit = () => {
-    const n = Number(value);
+  const commit = (raw: string) => {
+    const n = Number(raw);
     if (!Number.isFinite(n) || n < 1) {
       setValue(String(current));
       return;
     }
-    if (n !== current) setFeederDuration(marker.id, n);
+    const days = Math.min(90, Math.round(n));
+    setValue(String(days));
+    if (days !== current) setFeederDuration(marker.id, days);
   };
 
   return (
-    <div className="field" style={{ marginBottom: 8 }}>
-      <label htmlFor={`days-${marker.id}`}>Full to empty (days)</label>
-      <input
-        id={`days-${marker.id}`}
-        type="number"
-        min={1}
-        max={90}
-        step={1}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onBlur={commit}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') (e.target as HTMLInputElement).blur();
-        }}
-      />
+    <div className="feeder-duration">
+      <p className="feeder-duration-title">How long is this feeder full?</p>
+      <p className="meta feeder-duration-help">
+        Set days from a full fill until empty for <strong>{marker.name}</strong>.
+        Some last about a week, others three weeks or a month. The low-corn
+        warning uses this number.
+      </p>
+      <div className="chips" style={{ marginBottom: 10 }}>
+        {DURATION_PRESETS.map((p) => (
+          <button
+            key={p.days}
+            type="button"
+            className={`chip${current === p.days ? ' active' : ''}`}
+            onClick={() => commit(String(p.days))}
+          >
+            {p.label}
+          </button>
+        ))}
+      </div>
+      <div className="field" style={{ marginBottom: 0 }}>
+        <label htmlFor={inputId}>Days from full to empty</label>
+        <input
+          id={inputId}
+          type="number"
+          min={1}
+          max={90}
+          step={1}
+          inputMode="numeric"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onBlur={() => commit(value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') (e.target as HTMLInputElement).blur();
+          }}
+        />
+      </div>
     </div>
+  );
+}
+
+export function FeederSettingsButton({
+  marker,
+  small = true,
+}: {
+  marker: HuntMarker;
+  small?: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const { data } = useStore();
+  const days = feederDurationDays(marker, data);
+
+  return (
+    <>
+      <button
+        className={`btn ${small ? 'small' : ''}`}
+        type="button"
+        onClick={() => setOpen(true)}
+      >
+        Feeder settings · {days}d
+      </button>
+      {open && (
+        <FeederSettingsModal marker={marker} onClose={() => setOpen(false)} />
+      )}
+    </>
+  );
+}
+
+export function FeederSettingsModal({
+  marker,
+  onClose,
+}: {
+  marker: HuntMarker;
+  onClose: () => void;
+}) {
+  return (
+    <Modal title={`Feeder settings · ${marker.name}`} onClose={onClose}>
+      <CornStatusLine marker={marker} />
+      <div style={{ marginTop: 12 }}>
+        <FeederDurationField marker={marker} idPrefix="settings-days" />
+      </div>
+      <CornFillHistory marker={marker} limit={5} />
+      <div className="row" style={{ marginTop: 14 }}>
+        <MarkFilledButton marker={marker} small={false} />
+        <button className="btn ghost" type="button" onClick={onClose}>
+          Done
+        </button>
+      </div>
+    </Modal>
   );
 }
 

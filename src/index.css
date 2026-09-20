@@ -604,6 +604,37 @@ button {
   color: var(--gold-2);
 }
 
+.feeder-duration {
+  background: var(--surface-2);
+  border: 1px solid var(--gold);
+  border-radius: 12px;
+  padding: 12px;
+  margin: 10px 0;
+}
+
+.feeder-duration-title {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.feeder-duration-help {
+  margin: 0 0 10px;
+}
+
+.feeder-duration .field {
+  margin-bottom: 0;
+}
+
+.popup-card .feeder-duration {
+  background: #f3ead4;
+  border-color: #c4a35a;
+}
+
+.popup-card .feeder-duration-title {
+  color: #1a1f16;
+}
+
 .status {
   font-size: 12px;
   font-weight: 700;

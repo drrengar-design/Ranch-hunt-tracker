@@ -73,8 +73,8 @@ No extra dashboard enable step is required for Netlify Blobs on a linked site. T
 
 - **Mark filled with corn** (map popup or Blinds tab) appends a `cornFillEvents[]` row (`id`, `feederId`, `filledAt`, optional `by` / `notes`) and updates last-fill.
 - **Fill history** is on the feeder popup, Blinds cards, and the History tab.
-- Each feeder has **`fullToEmptyDays`** (default **7**, from `cornWarnDays` for new feeders). Edit on the popup, Blinds tab, or marker editor. It syncs with the marker.
-- **Low-corn warning** (map pin ring + Blinds badge): projected empty = last `filledAt` + that feeder’s `fullToEmptyDays`. Warn when now ≥ projected empty, or within **`cornWarnMarginDays`** (default **1**) before. Never-filled feeders always warn.
+- Each feeder has **`fullToEmptyDays`** (default **7** for new feeders). Set it per feeder in **Feeder settings** (map popup or Blinds tab): number of days, with presets for **1 week / 3 weeks / 1 month**. It syncs with the marker.
+- **Low-corn warning** (map pin ring + Blinds badge): projected empty = last `filledAt` + **that feeder’s** `fullToEmptyDays`. Warn when now ≥ projected empty, or within **`cornWarnMarginDays`** (default **1**) before. Never-filled feeders always warn.
 - Settings stores synced defaults: `cornWarnDays` (new feeders / fallback) and `cornWarnMarginDays`.
 
 ## iPad — Add to Home Screen
