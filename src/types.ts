@@ -52,4 +52,10 @@ export interface AppData {
   hunterRoster: string[];
 }
 
-export type TabId = 'map' | 'blinds' | 'seasons' | 'harvest' | 'settings';
+export type TabId =
+  | 'map'
+  | 'blinds'
+  | 'seasons'
+  | 'harvest'
+  | 'history'
+  | 'settings';

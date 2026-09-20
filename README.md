@@ -76,6 +76,7 @@ Suggested pins are Blind 1–7 and Feeder 1–7 on those lanes. Restore that lay
 - **Blinds** — occupancy board
 - **Seasons** — hunting seasons (occupancy and harvest attach to the active one)
 - **Harvest** — log and totals
+- **History** — check-in log (blind, hunter, in/out, season) with filters and CSV export
 - **Settings** — site lock, admin PIN, backup, layout restore, home-screen notes
 
 ## Data

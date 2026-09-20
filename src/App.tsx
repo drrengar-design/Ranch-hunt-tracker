@@ -7,6 +7,7 @@ import { MapView } from './components/MapView';
 import { BlindsTab } from './components/BlindsTab';
 import { SeasonsTab } from './components/SeasonsTab';
 import { HarvestTab } from './components/HarvestTab';
+import { HistoryTab } from './components/HistoryTab';
 import { SettingsTab } from './components/SettingsTab';
 import { SiteGate } from './components/SiteGate';
 
@@ -86,6 +87,7 @@ function Shell() {
         {tab === 'blinds' && <BlindsTab admin={admin} />}
         {tab === 'seasons' && <SeasonsTab admin={admin} />}
         {tab === 'harvest' && <HarvestTab admin={admin} />}
+        {tab === 'history' && <HistoryTab />}
         {tab === 'settings' && (
           <SettingsTab admin={admin} onUnlock={unlock} onLock={lock} />
         )}
