@@ -55,7 +55,8 @@ export function SettingsTab({
         <h3>Site lock</h3>
         <p className="meta">
           Lock this browser session. Anyone using this device will need the
-          site code again. This does not change admin mode.
+          site access code again (default 1808, or <code>VITE_SITE_PIN</code>).
+          This does not change admin mode or the Admin PIN.
         </p>
         <div className="row" style={{ marginTop: 10 }}>
           <button className="btn" type="button" onClick={lockSite}>
@@ -86,7 +87,7 @@ export function SettingsTab({
           <>
             <div className="hr" />
             <div className="field">
-              <label htmlFor="new-pin">Change PIN</label>
+              <label htmlFor="new-pin">Change Admin PIN</label>
               <input
                 id="new-pin"
                 inputMode="numeric"
@@ -102,7 +103,7 @@ export function SettingsTab({
               onClick={() => {
                 setPin(newPin.trim());
                 setNewPin('');
-                setMsg('PIN updated.');
+                setMsg('Admin PIN updated.');
               }}
             >
               Save PIN
@@ -166,7 +167,10 @@ export function SettingsTab({
 
       <article className="card" style={{ marginTop: 12 }}>
         <h3>Reset</h3>
-        <p className="meta">Wipe this device back to the v1 defaults (PIN 1234).</p>
+        <p className="meta">
+          Wipe this device back to the v1 defaults (Admin PIN 1234). Site access
+          code is unchanged.
+        </p>
         <button
           className="btn danger"
           type="button"
@@ -206,7 +210,10 @@ export function SettingsTab({
 
       {pinOpen && (
         <Modal title="Admin PIN" onClose={() => setPinOpen(false)}>
-          <p className="meta">Default PIN is 1234 until you change it.</p>
+          <p className="meta">
+            Admin PIN (default 1234 until you change it in Settings). This is
+            not the site access code.
+          </p>
           <div className="field">
             <label htmlFor="pin">PIN</label>
             <input

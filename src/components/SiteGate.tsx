@@ -56,6 +56,13 @@ export function SiteGate({ children }: { children: ReactNode }) {
   return (
     <div className="site-gate">
       <form className="site-gate-card" onSubmit={onSubmit}>
+        <div className="site-gate-logo-wrap">
+          <img
+            className="site-gate-logo"
+            src="/rancho-1808-logo.jpg"
+            alt="Rancho 1808"
+          />
+        </div>
         <p className="site-gate-kicker">Ranch Hunt Tracker</p>
         <h1>Enter site code</h1>
         <p className="site-gate-copy">

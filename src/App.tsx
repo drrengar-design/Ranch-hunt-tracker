@@ -38,8 +38,15 @@ function Shell() {
       <div className="app">
         <header className="header">
           <div className="brand">
-            <h1>Ranch Hunt</h1>
-            <span>Loading…</span>
+            <img
+              className="brand-logo"
+              src="/rancho-1808-logo.jpg"
+              alt=""
+            />
+            <div className="brand-text">
+              <h1>Ranch Hunt</h1>
+              <span>Loading…</span>
+            </div>
           </div>
         </header>
       </div>
@@ -50,8 +57,15 @@ function Shell() {
     <div className="app">
       <header className="header">
         <div className="brand">
-          <h1>Ranch Hunt</h1>
-          <span>{activeSeason?.name ?? 'No season'}</span>
+          <img
+            className="brand-logo"
+            src="/rancho-1808-logo.jpg"
+            alt=""
+          />
+          <div className="brand-text">
+            <h1>Ranch Hunt</h1>
+            <span>{activeSeason?.name ?? 'No season'}</span>
+          </div>
         </div>
         <div className="header-actions">
           <button

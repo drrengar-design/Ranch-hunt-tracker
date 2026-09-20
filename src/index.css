@@ -80,6 +80,25 @@ button {
 
 .brand {
   display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.brand-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  background: #f6f1e4;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 3px;
+  flex-shrink: 0;
+}
+
+.brand-text {
+  display: flex;
   flex-direction: column;
   gap: 1px;
   min-width: 0;
@@ -605,6 +624,23 @@ button {
   border-radius: 16px;
   padding: 28px 22px 24px;
   box-shadow: var(--shadow);
+}
+
+.site-gate-logo-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 0 0 18px;
+  padding: 16px 14px;
+  background: #f6f1e4;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.site-gate-logo {
+  display: block;
+  width: min(300px, 100%);
+  height: auto;
+  object-fit: contain;
 }
 
 .site-gate-kicker {

@@ -10,6 +10,7 @@ export default defineConfig({
       includeAssets: [
         'favicon.svg',
         'apple-touch-icon.png',
+        'rancho-1808-logo.jpg',
         'pwa-192.png',
         'pwa-512.png',
         'assets/ranch-map-annotated.jpg',
