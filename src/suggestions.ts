@@ -20,6 +20,16 @@ export const LAGUNA = {
     'Laguna — about 2 acres in the northeast ranch. Prime watering hole; blinds should overlook water and stay clear of the well/camp.',
 };
 
+/** Ranch house — west entrance / easement strip. */
+export const RANCH_HOUSE = {
+  id: 'ranch-house',
+  name: 'Ranch house',
+  x: 311,
+  y: 595,
+  notes:
+    'Ranch house on the west entrance / easement strip. Keep hunting activity clear of the house and driveway.',
+};
+
 /**
  * Initial blinds and feeders from the ranch photo marker layout
  * (1476×787 pixel coordinates).
