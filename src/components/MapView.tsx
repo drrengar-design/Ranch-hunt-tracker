@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
 import {
+  Circle,
   ImageOverlay,
   MapContainer,
   Marker,
@@ -458,6 +459,17 @@ export function MapView({ show, admin }: { show: boolean; admin: boolean }) {
         style={{ width: '100%', height: '100%', background: '#10140d' }}
       >
         <ImageOverlay url={MAP_IMAGE_URL} bounds={MAP_BOUNDS} />
+        <Circle
+          center={toLatLng(LAGUNA.x, LAGUNA.y)}
+          radius={LAGUNA.radius}
+          interactive={false}
+          pathOptions={{
+            color: '#8fbc5a',
+            weight: 3,
+            fillColor: '#6d9a3e',
+            fillOpacity: 0.32,
+          }}
+        />
         <ZoomControl position="bottomright" />
         <FitOnce />
         <InvalidateOnShow show={show} />
@@ -520,13 +532,16 @@ export function MapView({ show, admin }: { show: boolean; admin: boolean }) {
           <>
             <h2>Ranch map</h2>
             <div className="legend-row">
-              <span className="swatch lane" /> Yellow · boundary &amp; lanes
+              <span className="swatch boundary" /> Orange · property &amp; easement
             </div>
             <div className="legend-row">
-              <span className="swatch laguna" /> Laguna · ~2-acre pond
+              <span className="swatch lane" /> Yellow · hunting lanes
             </div>
             <div className="legend-row">
-              <span className="swatch well" /> Well / camp
+              <span className="swatch laguna" /> Laguna · NE pond
+            </div>
+            <div className="legend-row">
+              <span className="swatch well" /> Well / camp · west access
             </div>
             <div className="legend-row">
               <span className="swatch blind" /> Blind
@@ -567,7 +582,7 @@ export function MapView({ show, admin }: { show: boolean; admin: boolean }) {
       {placing && (
         <div className="map-ui place-banner">
           Tap the map to place a {placing}. Stay on lanes, overlook Laguna, keep
-          clear of the well/camp.
+          clear of the well/camp at the west access.
         </div>
       )}
 

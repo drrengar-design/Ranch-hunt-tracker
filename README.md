@@ -61,13 +61,14 @@ Tap **Admin OFF** in the header (or Settings → Unlock admin) and enter the PIN
 
 ## Map
 
-The annotated ranch satellite photo is a Leaflet `CRS.Simple` image overlay (`public/assets/ranch-map-annotated.jpg`):
+The north-up ranch satellite (`public/assets/ranch-map.jpg`) is a Leaflet `CRS.Simple` image overlay (1476×787):
 
-- **Yellow** — property boundary and hunting lanes/roads
-- **Green Laguna** — ~2-acre pond, upper-left
-- **Blue well** — well/campsite west of Laguna
+- **Orange** — property boundary, including the ~7-acre western easement to the county road
+- **Yellow** — hunting lanes/roads carried over from the older annotated map
+- **Green Laguna** — ~2-acre pond/tank, northeast
+- **Blue well** — well/campsite at the western access (easement into the ranch)
 
-Suggested blinds sit on lanes, overlook Laguna from the south or east, and stay clear of the well/camp. Restore that layout anytime from Settings (admin).
+Suggested blinds sit on lanes, overlook Laguna from the west or south, and stay clear of the well/camp. Restore that layout anytime from Settings (admin).
 
 ## Tabs
 

@@ -60,8 +60,8 @@ export function BlindsTab({ admin }: { admin: boolean }) {
     <div className="page">
       <h2>Blinds &amp; feeders</h2>
       <p className="sub">
-        Suggested stands sit on hunting lanes, overlook Laguna, and stay west-clear
-        of the well/camp.
+        Suggested stands sit on hunting lanes, overlook Laguna, and stay clear
+        of the well/camp at the western access.
       </p>
 
       <h3 style={{ margin: '0 0 8px' }}>Blinds</h3>

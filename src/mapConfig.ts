@@ -1,9 +1,12 @@
 import type { LatLngExpression, LatLngBoundsExpression } from 'leaflet';
 
-/** Pixel size of public/assets/ranch-map-annotated.jpg */
-export const MAP_WIDTH = 2048;
-export const MAP_HEIGHT = 2731;
-export const MAP_IMAGE_URL = '/assets/ranch-map-annotated.jpg';
+/** Pixel size of public/assets/ranch-map.jpg (north-up, orange boundary). */
+export const MAP_WIDTH = 1476;
+export const MAP_HEIGHT = 787;
+export const MAP_IMAGE_URL = '/assets/ranch-map.jpg';
+
+/** Bump when the base map or suggested pin layout changes so saved devices remap. */
+export const MAP_REVISION = 2;
 
 /** Leaflet CRS.Simple bounds: [south-west, north-east] = [[0,0], [height, width]] */
 export const MAP_BOUNDS: LatLngBoundsExpression = [

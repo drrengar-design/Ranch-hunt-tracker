@@ -116,7 +116,8 @@ export function SettingsTab({
         <h3>Layout</h3>
         <p className="meta">
           Restore the suggested blinds and feeders on lanes, overlooking Laguna,
-          clear of the well/camp. Occupied check-ins on stands are cleared.
+          clear of the well/camp at the western access. Occupied check-ins on
+          stands are cleared.
         </p>
         <button
           className="btn"
