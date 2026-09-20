@@ -18,6 +18,7 @@ import type {
   MarkerKind,
   Season,
 } from './types';
+import { MAP_LAYOUT_VERSION } from './mapConfig';
 import { defaultData, loadData, saveData } from './storage';
 import { SUGGESTED_MARKERS } from './suggestions';
 
@@ -153,6 +154,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       restoreSuggestions: () =>
         update((p) => ({
           ...p,
+          layoutVersion: MAP_LAYOUT_VERSION,
           markers: SUGGESTED_MARKERS.map((m) => ({ ...m })),
           checkIns: [],
         })),
