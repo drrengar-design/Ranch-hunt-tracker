@@ -6,6 +6,7 @@ import { TabBar } from './components/TabBar';
 import { MapView } from './components/MapView';
 import { BlindsTab } from './components/BlindsTab';
 import { SeasonsTab } from './components/SeasonsTab';
+import { RegsTab } from './components/RegsTab';
 import { HarvestTab } from './components/HarvestTab';
 import { HistoryTab } from './components/HistoryTab';
 import { SettingsTab } from './components/SettingsTab';
@@ -103,6 +104,7 @@ function Shell() {
         </div>
         {tab === 'blinds' && <BlindsTab admin={admin} />}
         {tab === 'seasons' && <SeasonsTab admin={admin} />}
+        {tab === 'regs' && <RegsTab />}
         {tab === 'harvest' && <HarvestTab admin={admin} />}
         {tab === 'history' && <HistoryTab />}
         {tab === 'settings' && (

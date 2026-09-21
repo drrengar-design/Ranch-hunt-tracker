@@ -33,6 +33,17 @@ const TABS: { id: TabId; label: string; icon: ReactNode }[] = [
     ),
   },
   {
+    id: 'regs',
+    label: 'Regs',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M7 4h9a2 2 0 012 2v14H8a3 3 0 01-3-3V6a2 2 0 012-2z" />
+        <path d="M5 19a2 2 0 012-2h13" />
+        <path d="M10 9h6M10 13h6" />
+      </svg>
+    ),
+  },
+  {
     id: 'harvest',
     label: 'Harvest',
     icon: (

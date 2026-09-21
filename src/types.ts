@@ -85,6 +85,7 @@ export type TabId =
   | 'map'
   | 'blinds'
   | 'seasons'
+  | 'regs'
   | 'harvest'
   | 'history'
   | 'settings';

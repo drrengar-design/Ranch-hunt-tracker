@@ -134,7 +134,8 @@ Suggested pins are Blind 1–7 and Feeder 1–7 on those lanes. Restore that lay
 
 - **Map** — pinch-zoom map, legend, pins, occupancy, low-corn badges
 - **Blinds** — occupancy board, corn status, mark filled, feeder duration
-- **Seasons** — hunting seasons (occupancy and harvest attach to the active one)
+- **Seasons** — ranch-managed hunting seasons (occupancy and harvest attach to the active one)
+- **Regs** — read-only TPWD Duval / South Zone calendar (Ramirez area). Not the editable ranch season list.
 - **Harvest** — log and totals
 - **History** — check-in log and corn-fill log (filters + CSV for check-ins)
 - **Settings** — site lock, sync secret, corn defaults, admin PIN, backup, layout restore
