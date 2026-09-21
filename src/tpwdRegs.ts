@@ -114,7 +114,8 @@ export function defaultLicenseYear(
   years: LicenseYearRegs[] = LICENSE_YEARS,
 ): LicenseYearId {
   const match = years.find((y) => iso >= y.yearStart && iso <= y.yearEnd);
-  return match?.id ?? years[years.length - 1].id;
+  if (match) return match.id;
+  return [...years].sort((a, b) => b.yearEnd.localeCompare(a.yearEnd))[0].id;
 }
 
 export function openSpecies(year: LicenseYearRegs, iso: string): SpeciesRegs[] {
@@ -327,7 +328,7 @@ const YEAR_2026_27: LicenseYearRegs = {
   yearStart: '2026-09-01',
   yearEnd: '2027-08-31',
   sourceNote:
-    'Current Outdoor Annual on the TPWD Duval county page (South Zone). Late youth-only deer dates are from the statewide 2026–2027 dates table.',
+    'Current Outdoor Annual on the TPWD Duval county page (South Zone / county seat San Diego).',
   sourceUrls: [
     { label: 'TPWD Duval County', href: TPWD_DUVAL_URL },
     { label: '2026–2027 season dates', href: TPWD_2026_27_DATES_URL },
@@ -341,7 +342,7 @@ const YEAR_2026_27: LicenseYearRegs = {
       notes: [
         'If MLDP buck or antlerless tags have been issued for a property, harvest is by MLDP tag only. Hunters using MLDP tags need a Resident or Non-resident General hunting license.',
         'Special late: antlerless deer and unbranched-antler bucks only (a buck with no more than one point on an antler).',
-        'Youth-only: licensed hunters 16 or younger. Late youth-only (Jan. 4–17, 2027) is the statewide date on the 2026–2027 TPWD dates page.',
+        'Youth-only: licensed hunters 16 or younger. The Duval county page lists early youth-only only for 2026–2027 deer.',
       ],
       periods: [
         {
@@ -358,11 +359,6 @@ const YEAR_2026_27: LicenseYearRegs = {
           id: 'general',
           label: 'General',
           ranges: [{ start: '2026-11-07', end: '2027-01-17' }],
-        },
-        {
-          id: 'youth-late',
-          label: 'Late youth-only',
-          ranges: [{ start: '2027-01-04', end: '2027-01-17' }],
         },
         {
           id: 'special-late',
@@ -614,7 +610,7 @@ const YEAR_2026_27: LicenseYearRegs = {
   ],
 };
 
-export const LICENSE_YEARS: LicenseYearRegs[] = [YEAR_2025_26, YEAR_2026_27];
+export const LICENSE_YEARS: LicenseYearRegs[] = [YEAR_2026_27, YEAR_2025_26];
 
 export function yearById(id: LicenseYearId): LicenseYearRegs {
   const found = LICENSE_YEARS.find((y) => y.id === id);

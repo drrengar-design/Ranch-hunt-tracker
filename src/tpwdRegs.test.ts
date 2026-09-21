@@ -87,6 +87,19 @@ describe('localISODate', () => {
   });
 });
 
+describe('cited 2026–27 deer dates', () => {
+  it('matches the current TPWD Duval county page', () => {
+    const deer = yearById('2026-27').species.find((s) => s.id === 'deer')!;
+    const byId = Object.fromEntries(deer.periods.map((p) => [p.id, p.ranges]));
+    expect(byId.archery).toEqual([{ start: '2026-10-03', end: '2026-11-06' }]);
+    expect(byId.general).toEqual([{ start: '2026-11-07', end: '2027-01-17' }]);
+    expect(byId['youth-early']).toEqual([{ start: '2026-10-30', end: '2026-11-01' }]);
+    expect(byId['special-late']).toEqual([{ start: '2027-01-18', end: '2027-01-31' }]);
+    expect(byId['youth-late']).toBeUndefined();
+    expect(deer.bag).toMatch(/5 deer/i);
+  });
+});
+
 describe('cited 2025–26 deer dates', () => {
   it('matches the TPWD Duval / South Zone list', () => {
     const deer = yearById('2025-26').species.find((s) => s.id === 'deer')!;
