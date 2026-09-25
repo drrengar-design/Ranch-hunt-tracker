@@ -45,9 +45,9 @@ In **Site configuration → Environment variables** (or `netlify env:set`):
 | --- | --- | --- |
 | `RANCH_SYNC_SECRET` | Server (functions) | Required for GET/PUT. If unset, functions fall back to `1808`. |
 | `VITE_RANCH_SYNC_SECRET` | Build (optional) | Bakes the same secret into the client. Rebuild after changing. |
-| `VITE_SITE_PIN` | Build | Site gate only (default **1808**). **Not** the sync secret. |
+| `VITE_SITE_PIN` | Build | Site gate only (default **5858**). **Not** the sync secret. |
 
-Set `RANCH_SYNC_SECRET` to a dedicated value in production. Until you do, the documented default is `1808` (same digits as the site code, but a different setting — change them independently).
+Set `RANCH_SYNC_SECRET` to a dedicated value in production. Until you do, the documented default is `1808` (independent of the site access code).
 
 On a device, Settings → **Ranch sync secret** stores an override in `localStorage` (`ranch-hunt-sync-secret`) when `VITE_RANCH_SYNC_SECRET` is not baked in.
 
@@ -92,14 +92,14 @@ On the Map tab, **pinch to zoom** and **drag to pan**. Page zoom is turned off s
 
 Before the app UI loads, a gate asks for a site code. The correct code is checked in the browser only. Success sets `sessionStorage` key `ranchHuntSiteUnlocked=1`, so this browser tab/session stays unlocked until it is closed (or you tap **Lock** in Settings). A new session must enter the code again.
 
-Default site access code is **1808**. Change it with a Vite env var (do not commit `.env`):
+Default site access code is **5858**. Change it with a Vite env var (do not commit `.env`):
 
 ```bash
 # .env
 VITE_SITE_PIN=your-code
 ```
 
-If `VITE_SITE_PIN` is unset, the app falls back to `1808`. See `.env.example`. Rebuild after changing the env var so it is baked into the client bundle. On Netlify, set `VITE_SITE_PIN` in Site configuration → Environment variables.
+If `VITE_SITE_PIN` is unset, the app falls back to `5858`. See `.env.example`. Rebuild after changing the env var so it is baked into the client bundle. On Netlify, set `VITE_SITE_PIN` in Site configuration → Environment variables. If that variable is already set to an older code, change it to `5858` and redeploy — a set value overrides the built-in default.
 
 This gate is separate from **Admin mode** below and from the **ranch sync secret**.
 
@@ -109,7 +109,7 @@ Default Admin PIN is **1234** (stored in app data; change it in Settings). This 
 
 | Code | Default | Where it lives | What it unlocks |
 | --- | --- | --- | --- |
-| Site access | **1808** | `VITE_SITE_PIN` (or built-in default) | The PIN gate before the app UI |
+| Site access | **5858** | `VITE_SITE_PIN` (or built-in default) | The PIN gate before the app UI |
 | Admin PIN | **1234** | App data / Settings | Map edit tools (blinds & feeders) |
 | Ranch sync | **1808** until you set env | `RANCH_SYNC_SECRET` + client secret | Read/write `/api/sync` |
 
