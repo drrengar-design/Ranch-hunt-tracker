@@ -87,7 +87,7 @@ export function SettingsTab({
           {syncDetail ? ` · ${syncDetail}` : ''}. Check-ins, check-outs,
           harvests, pin positions, and corn fills push after each change. Other
           devices poll every few seconds. The ranch sync secret is separate from
-          the site access code (1808).
+          the site access code (5858).
         </p>
         {hasBakedSyncSecret() ? (
           <p className="meta" style={{ marginTop: 8 }}>
@@ -178,7 +178,7 @@ export function SettingsTab({
         <h3>Site lock</h3>
         <p className="meta">
           Lock this browser session. Anyone using this device will need the
-          site access code again (default 1808, or <code>VITE_SITE_PIN</code>).
+          site access code again (default 5858, or <code>VITE_SITE_PIN</code>).
           This does not change admin mode or the Admin PIN.
         </p>
         <div className="row" style={{ marginTop: 10 }}>

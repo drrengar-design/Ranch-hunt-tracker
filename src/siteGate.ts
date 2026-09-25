@@ -1,5 +1,5 @@
 export const SITE_UNLOCK_KEY = 'ranchHuntSiteUnlocked';
-export const DEFAULT_SITE_PIN = '1808';
+export const DEFAULT_SITE_PIN = '5858';
 
 export function getSitePin(): string {
   const fromEnv = import.meta.env.VITE_SITE_PIN;
